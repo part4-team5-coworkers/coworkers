@@ -448,7 +448,7 @@ export default abstract class API {
 		 * @param {Object} query - 쿼리 파라미터
 		 * @returns {Promise<Object>} - Task 목록
 		 */
-		public override GET({ teamId = "6-5", groupId, taskListId, ...query }: { teamId?: string; groupId: number; taskListId: number }) {
+		public override GET({ teamId = "6-5", groupId, taskListId, ...query }: { teamId?: string; groupId: number; taskListId: number; date: string }) {
 			return API.GET<Task[]>(MIME.JSON, `${BASE_URL}/${teamId}/groups/${groupId}/task-lists/${taskListId}/tasks`, query);
 		}
 	})();
@@ -467,8 +467,8 @@ export default abstract class API {
 		 * @param {Object} query - 쿼리 파라미터
 		 * @returns {Promise<Object>} - Task 상세 정보
 		 */
-		public override GET({ teamId = "6-5", groupId, taskListId, taskId, ...query }: { teamId?: string; groupId: number; taskListId: number; taskId: number }) {
-			return API.GET<Todo>(MIME.JSON, `${BASE_URL}/${teamId}/groups/${groupId}/task-lists/${taskListId}/tasks/${taskId}`, query);
+		public override GET({ teamId = "6-5", taskId, ...query }: { teamId?: string; taskId: number }) {
+			return API.GET<Todo>(MIME.JSON, `${BASE_URL}/${teamId}/groups/{groupId}/task-lists/{taskListId}/tasks/${taskId}`, query);
 		}
 
 		/**
@@ -1114,13 +1114,14 @@ interface UpdatePasswordBody {
 interface Task {
 	deletedAt: string;
 	recurringId: number;
-	frequency: string;
+	frequency: "ONCE" | "DAILY" | "WEEKLY" | "MONTHLY";
 	userId: number;
 	date: string;
 	doneAt: string;
 	updatedAt: string;
 	name: string;
 	id: number;
+	commentCount: number;
 }
 
 type TaskRecurringCreateDto = MonthlyRecurringCreateBody | WeeklyRecurringCreateBody | DailyRecurringCreateBody | OnceRecurringCreateBody;
