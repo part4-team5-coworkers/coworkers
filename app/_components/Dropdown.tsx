@@ -55,28 +55,28 @@ export default function DropDown({
 	function recursive(items: Option[], close: () => void) {
 		return (
 			<div
-				className={`flex min-w-[120px] rounded-[12px] border border-white border-opacity-5 bg-background-secondary text-[#F8FAFC] ${
+				className={`flex w-max min-w-[120px] rounded-[12px] border border-white border-opacity-5 bg-background-secondary text-[#F8FAFC] ${
 					items.some((option) => option.image) ? "space-y-2" : ""
 				}`}
 			>
 				{items.map((option, index) => (
-					<div
-						key={option.text || index}
-						className={`flex items-center rounded-[8px] p-[8px] ${option.content ? "" : "hover:bg-[#63748D]"} ${
-							option.image ? "mx-[16px] mt-[16px] w-[186px] justify-between" : "justify-center"
-						}`}
-					>
-						<div className="flex items-center justify-center gap-[12px]">
-							{option.image && (
-								<div>
-									<Image src={option.image} alt={option.text || ""} width={32} height={32} />
-								</div>
-							)}
-							<button type="button" className="cursor-pointer" onClick={(e) => handleOptionClick(e, option.onClick, close)}>
-								<p>{option.text}</p>
+					<div key={`${option.text} ${index}` || index} className={`flex size-full items-center rounded-[8px] ${option.content ? "" : "hover:bg-[#63748D]"} `}>
+						{option.content ? (
+							<button type="button" onClick={(e) => handleOptionClick(e, option.onClick, close)} className="size-full">
+								{option.content}
 							</button>
-						</div>
-						{option.content && <div className="mb-[16px]">{option.content}</div>}
+						) : (
+							<div className="flex size-full items-center justify-center gap-[12px]">
+								<button
+									type="button"
+									className="flex size-full cursor-pointer items-center justify-center gap-2 p-[8px]"
+									onClick={(e) => handleOptionClick(e, option.onClick, close)}
+								>
+									{option.image && <Image src={option.image} alt={option.text || "empty"} width={32} height={32} />}
+									<p className={`full flex flex-grow ${!option.image && "justify-center"}`}>{option.text}</p>
+								</button>
+							</div>
+						)}
 						{option.options && option.options.length > 0 && (
 							<Popover
 								overlay={(subClose) =>
